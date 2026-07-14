@@ -1,0 +1,32 @@
+# Model binaries (dùng MLflow Registry để version model, không commit vào Git)
+models/*.joblib
+models/*.pkl
+
+# Dữ liệu lớn (dùng DVC nếu cần version data)
+data/*.csv
+data/*.parquet
+
+# Môi trường ảo
+.venv/
+venv/
+env/
+
+# Secrets & config nhạy cảm
+.env
+*.key
+config/secrets*
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MLflow local (tuỳ chọn: giữ mlruns/ ngoài Git, dùng tracking server nếu làm nhóm)
+mlruns/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store

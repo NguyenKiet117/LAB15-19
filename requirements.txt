@@ -1,0 +1,12 @@
+scikit-learn
+pandas
+numpy
+scipy
+mlflow
+joblib
+fastapi
+uvicorn
+pydantic
+pytest
+pytest-cov
+requests

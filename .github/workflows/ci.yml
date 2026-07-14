@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop, "feature/**"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test-and-train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run unit tests with coverage
+        run: pytest --cov=src --cov-report=term-missing
+
+      # Train thử trên mẫu nhỏ để bảo đảm pipeline train không gãy.
+      # TODO (bạn tự làm): src/train.py cần hỗ trợ cờ --smoke
+      # (ví dụ: chỉ lấy ~100 dòng đầu, 1 cấu hình, không log MLflow).
+      - name: Smoke-train on small sample
+        run: python src/train.py --smoke
