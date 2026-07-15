@@ -44,7 +44,7 @@ bc_mlops/
 ## Module 1 — Pipeline & Leakage
 
 **DỰ ĐOÁN TRƯỚC KHI CHẠY (bắt buộc, ghi trước khi có kết quả):**
-- Tôi đoán ROC-AUC ≈ ___ vì: ...
+- Tôi đoán ROC-AUC ≈ 0.98 vì: Breast Cancer là dataset dễ, tuyến tính tách tốt
 
 **Kết quả thật (bản đúng — scale trong Pipeline):**
 
