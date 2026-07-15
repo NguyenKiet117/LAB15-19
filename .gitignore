@@ -30,3 +30,5 @@ mlruns/
 .vscode/
 .idea/
 .DS_Store
+mlflow.db
+logs/*.log
