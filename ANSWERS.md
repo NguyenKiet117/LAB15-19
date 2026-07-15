@@ -50,20 +50,20 @@ bc_mlops/
 
 | Metric | Giá trị của tôi |
 |---|---|
-| Accuracy | ___ |
-| F1 | ___ |
-| ROC-AUC | ___ |
-| CV 5-fold (mean ± std) | ___ ± ___ |
+| Accuracy | 0.9825 |
+| F1 | 0.9861 |
+| ROC-AUC | 0.9954 |
+| CV 5-fold (mean ± std) | 0.9935 ± 0.0108 |
 
 **Bản leakage (scale toàn bộ X trước split):**
-- ROC-AUC leakage: ___
-- Chênh lệch so với bản đúng: ___
-- Nhận xét của tôi: ...
+- ROC-AUC leakage: 0.9954
+- Chênh lệch so với bản đúng: +0.0000
+- Nhận xét của tôi: dataset nhỏ, sạch, phân phối train/test giống nhau nên leakage qua scaler ít lộ; nhưng trên dữ liệu thật (phân phối lệch, có outlier, có time-series) leakage sẽ thổi phồng điểm rõ rệt.
 
 **Phản biện M1:** (trả lời bằng lời của mình, gắn số ở trên)
-- Cơ chế Pipeline chống leakage khi CV: ...
-- RandomForest có cần StandardScaler không, vì sao: ...
-- Vì sao điểm leakage là điểm giả: ...
+- Cơ chế Pipeline chống leakage khi CV: Trong cross validation, khi dùng pipeline thì ở mỗi fold, sklearn chỉ fit scaler (tính mean và std) trên phần train của fold đó, sau đó mới dùng scaler này để transform cả train và validation. Nếu bạn scale dữ liệu trước khi đưa vào cross_val_score (không dùng pipeline), mean/std sẽ được tính trên cả validation fold → làm rò rỉ thông tin của tập đánh giá vào bước tiền xử lý, dẫn đến kết quả đánh giá không còn chính xác.
+- RandomForest có cần StandardScaler không, vì sao: Không ảnh hưởng nhiều đến chất lượng mô hình. Cây quyết định chia dữ liệu theo ngưỡng trên từng đặc trưng (ví dụ: radius > 14.5?), nên việc scale dữ liệu chỉ thay đổi con số ngưỡng chứ không thay đổi cách chia nhánh, kết quả mô hình gần như giống nhau. Scaler chỉ quan trọng với các mô hình dựa trên khoảng cách hoặc gradient như Logistic Regression, SVM, KNN hay mạng nơ-ron.
+- Vì sao điểm leakage là điểm giả: Vì mô hình đã vô tình “nhìn trộm” thông tin của tập test trong bước tiền xử lý nên kết quả đánh giá bị lạc quan hơn thực tế. Khi đưa mô hình ra chạy trên dữ liệu thật (dữ liệu mới hoàn toàn chưa từng thấy), hiệu suất sẽ giảm mạnh xuống mức đúng, khiến bạn không giữ được con số đã hứa với business.
 
 ---
 
