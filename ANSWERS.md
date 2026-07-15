@@ -1,6 +1,6 @@
 # ANSWERS.md — Practice LAB Chapter 15–19
 
-> Họ tên: ............ · MSSV: ............ · Ngày: ............
+> Họ tên: Lê Nguyên Kiệt · MSSV: SE173346 · Ngày: 15/07/2026
 > Quy tắc tự nhắc: mọi ô ghi `___` phải là SỐ TÔI TỰ CHẠY RA, không chép.
 
 ---
@@ -10,7 +10,17 @@
 **Cây thư mục:** (dán output của `tree` hoặc `find . -type d`)
 
 ```
-(dán vào đây)
+bc_mlops/
+├── data/                  # (trống — data load trực tiếp từ sklearn)
+├── src/                   # code train, pipeline, drift
+├── app/                   # FastAPI app
+├── tests/                 # pytest
+├── models/                # model .joblib (KHÔNG commit — xem .gitignore)
+├── logs/                  # prediction logs (M4)
+├── config/                # config nếu cần
+├── .github/workflows/     # ci.yml (M5)
+├── ANSWERS.md             # ĐIỀN SỐ LIỆU CỦA BẠN vào đây
+└── requirements.txt
 ```
 
 **git log --oneline:**
@@ -20,8 +30,14 @@
 ```
 
 **Phản biện M0:**
-- Vì sao version code + data + model (hậu quả cụ thể nếu chỉ version code): ...
-- Vì sao không commit .joblib/secrets; công cụ thay thế (DVC, Registry, ...): ...
+- Vì sao version code + data + model (hậu quả cụ thể nếu chỉ version code): Trong phần mềm thông thường, cùng một code sẽ cho ra cùng một kết quả. Nhưng với mô hình ML thì khác, kết quả của mô hình phụ thuộc vào code, dữ liệu và tham số huấn luyện. Cùng một file train.py nhưng huấn luyện trên dữ liệu tháng 1 và dữ liệu tháng 3 sẽ ra hai mô hình khác nhau. Nếu chỉ version code thôi, khi production bị lỗi checkout về commit cũ, chạy train lại nhưng dữ liệu đã bị ghi đè hoặc cập nhật mới nên không thể tạo ra đúng mô hình đang chạy trên production. Lúc đó sẽ không debug được lỗi cũng như không thể khôi phục về phiên bản cũ.
+
+- Vì sao không commit .joblib/secrets; công cụ thay thế (DVC, Registry, ...): 
+    + File mô hình thường rất lớn (dạng binary) và thay đổi sau mỗi lần huấn luyện. Nếu để vào git thông thường, repository sẽ phình to rất nhanh, đồng thời lệnh git diff cũng không xem được sự khác biệt một cách có ý nghĩa.
+    + Bí mật (secrets) như API key, mật khẩu database… nếu vô tình commit vào git thì sẽ rò rỉ vĩnh viễn. Dù sau này bạn xóa file đi, lịch sử git vẫn còn lưu lại, ai đó vẫn có thể khai thác được.
+    + Giải pháp thay thế phổ biến:
+        1. Với dữ liệu và mô hình lớn: Dùng DVC, Git LFS, hoặc MLflow Model Registry.
+        2. Với secrets: Dùng biến môi trường, GitHub Secrets, HashiCorp Vault,… thay vì commit trực tiếp vào code.  
 
 ---
 
